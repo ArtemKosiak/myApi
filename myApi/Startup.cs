@@ -12,6 +12,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using myApi.Clients;
+using myApi.Constans;
+using Amazon.Runtime;
+using Amazon.DynamoDBv2;
+using Amazon;
+using Amazon.DynamoDBv2.DataModel;
+
 namespace myApi
 {
     public class Startup
@@ -34,6 +40,16 @@ namespace myApi
             });
             services.AddSingleton<ExchangeClient>();
             services.AddSingleton<ExchangeClientCrypt>();
+
+            var credentials = new BasicAWSCredentials(Constants.AccessKey, Constants.AccessKeySecret);
+            var config = new AmazonDynamoDBConfig()
+            {
+                RegionEndpoint = RegionEndpoint.USEast1
+            };
+            var client = new AmazonDynamoDBClient(credentials, config);
+            services.AddSingleton<IAmazonDynamoDB>(client);
+            services.AddSingleton<IDynamoDBContext, DynamoDBContext>();
+            services.AddSingleton<IDynamoDbClient, DynamoDbClient>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
