@@ -19,9 +19,17 @@ namespace myApi.Clients
             _dynamoDb = dynamoDb;
             _tableName = Constants.TableName;
         }
-        Task IDynamoDbClient.Delete()
+        public async Task Delete(long ID)
         {
-            throw new NotImplementedException();
+            var item = new DeleteItemRequest
+            {
+                TableName = _tableName,
+                Key = new Dictionary<string, AttributeValue>
+                {
+                    {"ID", new AttributeValue{N = ID.ToString()}}
+                }
+            };
+            var response = await _dynamoDb.DeleteItemAsync(item);           
         }
 
         public async Task<CryptExchangeDb> GetDataFromDb(long ID)
@@ -29,9 +37,9 @@ namespace myApi.Clients
             var item = new GetItemRequest
             {
                 TableName = _tableName,
-                Key = new Dictionary<string, AttributeValue>
+                Key = new Dictionary<string,AttributeValue>
                 {
-                    {"ID", new AttributeValue{N = ID.ToString()} }
+                    {"ID", new AttributeValue{N = ID.ToString()}}
                 }
             };
             var response = await _dynamoDb.GetItemAsync(item);
@@ -43,9 +51,18 @@ namespace myApi.Clients
             return result;
         }
 
-        Task IDynamoDbClient.PostDataToDb()
+        public async Task PostDataToDb(CryptExchangeDb data)
         {
-            throw new NotImplementedException();
+            var request = new PutItemRequest
+            {
+                TableName = _tableName,
+                Item = new Dictionary<string, AttributeValue>
+                {
+                    {"ID", new AttributeValue{N = data.ID.ToString()}},
+                     {"Exchange", new AttributeValue{S=data.Exchange} }
+                }
+            };
+            var responce = await _dynamoDb.PutItemAsync(request);
         }
     }
 }

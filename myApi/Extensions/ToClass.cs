@@ -24,7 +24,7 @@ namespace myApi.Extensions
                     else if (!string.IsNullOrEmpty(kv.Value.N))
                     {
                         property.SetValue(obj, kv.Value.N);
-                    }
+                    }                   
                 }
             }
             return (T)obj;

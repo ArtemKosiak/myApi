@@ -9,7 +9,7 @@ namespace myApi.Clients
     public interface IDynamoDbClient
     {
         public Task<CryptExchangeDb> GetDataFromDb(long ID);
-        public Task PostDataToDb();
-        public Task Delete();
+        public Task PostDataToDb(CryptExchangeDb data);
+        public Task Delete(long ID);
     }
 }
