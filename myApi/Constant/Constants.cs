@@ -11,6 +11,6 @@ namespace myApi.Constans
         public static string adress1 = "https://api.coingecko.com";
         public static string AccessKey = "AKIAR7GF63ZJEJTZYBMC";
         public static string AccessKeySecret = "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";
-        public static string TableName = "FavoritExchanges";
+        public static string TableName = "FavoriteExchange";
     }
 }

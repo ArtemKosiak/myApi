@@ -20,7 +20,7 @@ namespace myApi.Controllers
     [Route("[controller]")]
     public class ExchangeRateCryptController : ControllerBase
     {
-        WebClient webClient = new WebClient();
+       
         private readonly ILogger<ExchangeRateCryptController> _logger;
         private readonly ExchangeClientCrypt _exchangeClientCrypt;
         private readonly IDynamoDbClient _dynamoDbClient;
@@ -43,44 +43,63 @@ namespace myApi.Controllers
             return exchange;
         }
         [HttpGet]
-        public async Task<market> GetFavoriteExchange([FromQuery] long ID)
+        public async Task<fmarket> GetFavoriteExchange([FromQuery] string ID)//IActionResult
         {
             var result = await _dynamoDbClient.GetDataFromDb(ID);
             if (result == null)
             {
                 return null;
             }
-            var responce = new market
+            var responce = new fmarket
             {
-                name = result.Exchange,
+                Exchange = result.Exchange,
             };
+            // var Data = JsonConvert.DeserializeObject<List<string>>(responce.name);
+            // var Data = JsonConvert.DeserializeObject<List<string>>(responce.name);
             return responce;
         }
         [HttpPost]
-        public async Task<IActionResult> AddFavorites([FromBody] CryptExchangeBurse cryptExchangeBurse, long User_id)
+        public async Task<IActionResult> AddFavorites([FromBody] CryptExchangeDb cryptExchangeDb)
         {
-
-            var json = webClient.DownloadString($"https://localhost:44368/ExchangeRateCrypt?ID={User_id}");
-            var result = JsonConvert.DeserializeObject<CryptExchangeBurse>(json);
-            string newExchange = cryptExchangeBurse.tickers.FirstOrDefault().market.name;
-            if (result != null)
-            {
-                newExchange += " " + result.name;
-            }
-
-            var data = new CryptExchangeDb
-            {
-                ID = User_id.ToString(),
-                Exchange = JsonConvert.SerializeObject(newExchange)
-
-            };
-            await _dynamoDbClient.PostDataToDb(data);
+            await _dynamoDbClient.PostDataToDb(cryptExchangeDb);
+              
             return Ok();
         }
         [HttpDelete]
-        public async Task Delete(long User_id)
+        public async Task<IActionResult> Delete(string User_id)
         {
+            //var json = webClient.DownloadString($"https://localhost:44368/ExchangeRateCrypt?ID={User_id}");
+            //var result = JsonConvert.DeserializeObject<CryptExchangeBurse>(json);
+            //string newExchange;
+            //if (del != null && del != "all" && result.name.Contains(del) == true)
+            //{
+            //    newExchange = result.name.Replace(del, null);
+            //    string[] exchanges = newExchange.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            //    if (exchanges.Length == 0)
+            //    {
+            //        await _dynamoDbClient.Delete(User_id);
+            //        return Ok();
+            //    }
+            //    string resultExchange = null;
+            //    foreach (string s in exchanges)
+            //    {
+            //        resultExchange += " " + s;
+            //    }
+            //    resultExchange = resultExchange.Remove(0, 1);
+
+            //    var data = new CryptExchangeDb
+            //    {
+            //        ID = User_id.ToString(),
+            //        Exchange = resultExchange
+
+            //    };
+            //    await _dynamoDbClient.PostDataToDb(data);
+            //}
+            //else 
+            //{
+            //}
             await _dynamoDbClient.Delete(User_id);
+            return Ok();
         }
     }
 }

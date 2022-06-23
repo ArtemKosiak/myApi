@@ -29,7 +29,10 @@ namespace myApi.Model
         public double btc { get; set; }
         public double usd { get; set; }
     }
-
+    public class fmarket
+    {
+        public string Exchange { get; set; }
+    }
 
 
 }

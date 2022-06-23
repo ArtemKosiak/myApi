@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using myApi.Constans;
 using myApi.Model;
 using myApi.Extensions;
+using Newtonsoft.Json;
 
 namespace myApi.Clients
 {
@@ -19,27 +20,28 @@ namespace myApi.Clients
             _dynamoDb = dynamoDb;
             _tableName = Constants.TableName;
         }
-        public async Task Delete(long ID)
+        public async Task Delete(string ID)
         {
             var item = new DeleteItemRequest
             {
                 TableName = _tableName,
                 Key = new Dictionary<string, AttributeValue>
                 {
-                    {"ID", new AttributeValue{N = ID.ToString()}}
+                    {"ID", new AttributeValue{S = ID}},                    
                 }
             };
-            var response = await _dynamoDb.DeleteItemAsync(item);           
+            var response = await _dynamoDb.DeleteItemAsync(item);
+            
         }
 
-        public async Task<CryptExchangeDb> GetDataFromDb(long ID)
+        public async Task<CryptExchangeDb> GetDataFromDb(string ID)
         {
             var item = new GetItemRequest
             {
                 TableName = _tableName,
                 Key = new Dictionary<string,AttributeValue>
                 {
-                    {"ID", new AttributeValue{N = ID.ToString()}}
+                    {"ID", new AttributeValue{S = ID}}
                 }
             };
             var response = await _dynamoDb.GetItemAsync(item);
@@ -52,17 +54,18 @@ namespace myApi.Clients
         }
 
         public async Task PostDataToDb(CryptExchangeDb data)
-        {
+        {          
             var request = new PutItemRequest
             {
                 TableName = _tableName,
                 Item = new Dictionary<string, AttributeValue>
                 {
-                    {"ID", new AttributeValue{N = data.ID.ToString()}},
+                    {"ID", new AttributeValue{S = data.ID}},
                      {"Exchange", new AttributeValue{S=data.Exchange} }
                 }
             };
             var responce = await _dynamoDb.PutItemAsync(request);
-        }
+            
+        }      
     }
 }
