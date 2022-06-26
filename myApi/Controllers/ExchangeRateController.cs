@@ -23,6 +23,10 @@ namespace myApi.Controllers
         public async Task<List<ExchangeDate>> GetExchange([FromRoute] string Date, string valcode)
         {
             var exchange = await _exchangeClient.GetExchangeByDate(Date, valcode);
+            if (exchange == null)
+            {
+                return null;
+            }
             return exchange;
         }
     }

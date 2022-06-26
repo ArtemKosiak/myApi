@@ -40,7 +40,7 @@ namespace myApi
             });
             services.AddSingleton<ExchangeClient>();
             services.AddSingleton<ExchangeClientCrypt>();
-
+            services.AddSingleton<DynamoDbClient>();
             var credentials = new BasicAWSCredentials(Constants.AccessKey, Constants.AccessKeySecret);
             var config = new AmazonDynamoDBConfig()
             {

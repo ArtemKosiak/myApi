@@ -15,24 +15,17 @@ namespace myApi.Model
     {
         
         public market market { get; set; }
-        public string target { get; set; }
-        public double last { get; set; }
         public converted_last converted_Last { get; set; }
 
     }
     public class market 
     {
         public string name { get; set; }
+        public string identifier { get; set; }
     }
     public class converted_last
     {
         public double btc { get; set; }
         public double usd { get; set; }
     }
-    public class fmarket
-    {
-        public string Exchange { get; set; }
-    }
-
-
 }
